@@ -1,0 +1,112 @@
+{
+  "variables": {
+    "ADOServicePrincipalAppId": "",
+    "ADOServicePrincipalSecret": "",
+    "TenantId": "",
+    "SubscriptionId": "",
+
+    "ImageDestRG": "",    
+    "TempResourceGroup": "",
+
+    "VirtualNetwork": "",
+    "VirtualNetworkRG": "",
+    "Subnet": "",
+
+    "Location": "",
+    "VMSize": "",
+
+    "StorageAccountName": "",
+    "StorageAccountKey": "",
+    "packaged_app_installs_path": "",
+
+    "ImagePublisher":"MicrosoftWindowsDesktop",
+    "ImageOffer":"office-365",
+    "ImageSku":"21h1-evd-o365pp",
+
+    "Build_DefinitionName": "{{env `Build_DefinitionName`}}",
+    "Build_BuildNumber": "{{env `Build_BuildNumber`}}"
+  },
+  "builders": [
+    {
+      "type": "azure-arm",
+        
+      "client_id": "{{user `ADOServicePrincipalAppId`}}",
+      "client_secret": "{{user `ADOServicePrincipalSecret`}}",
+      "tenant_id": "{{user `TenantId`}}",
+      "subscription_id": "{{user `SubscriptionId`}}",
+
+      "os_type": "Windows",
+      "managed_image_name": "{{user `Build_DefinitionName`}}-{{isotime \"2006-01-02-1504\"}}-Build{{user `Build_BuildNumber`}}",
+      "managed_image_resource_group_name": "{{user `ImageDestRG`}}",
+      "temp_resource_group_name": "{{user `TempResourceGroup`}}",
+
+      "image_publisher": "{{user `ImagePublisher`}}",
+      "image_offer": "{{user `ImageOffer`}}",
+      "image_sku": "{{user `ImageSku`}}",
+      "communicator": "winrm",
+      "winrm_use_ssl": "true",
+      "winrm_insecure": "true",
+      "winrm_timeout": "30m",
+      "winrm_username": "packer",
+
+      "virtual_network_name": "{{user `VirtualNetwork`}}",
+      "virtual_network_subnet_name": "{{user `Subnet`}}",
+      "virtual_network_resource_group_name": "{{user `VirtualNetworkRG`}}",
+      "private_virtual_network_with_public_ip": "True",
+      "azure_tags": {
+        "Image Publisher": "{{user `ImagePublisher`}}",
+        "Image Offer": "{{user `ImageOffer`}}",
+        "Image SKU": "{{user `ImageSku`}}"
+      },
+
+      "location": "{{user `Location`}}",
+      "vm_size": "{{user `VMSize`}}",
+
+      "async_resourcegroup_delete":true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+          "while ((Get-Service RdAgent).Status -ne 'Running') { Start-Sleep -s 5 }",
+          "while ((Get-Service WindowsAzureGuestAgent).Status -ne 'Running') { Start-Sleep -s 5 }",
+          "& net stop WindowsAzureGuestAgent",
+          "& net stop rdagent",
+          "Set-ExecutionPolicy Bypass -Scope Process -Force",
+          "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12",
+          "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))",
+          "choco install notepadplusplus -y --force --force-dependencies",
+          "choco install 7zip -y --force --force-dependencies",
+          "choco install firefox -y --params \"/l:es-ES\" --force --force-dependencies",
+          "choco install fslogix -y --force --force-dependencies",
+	        "choco install microsoft-teams.install --params \"'/AllUsers /NoAutoStart'\" -y --force --force-dependencies" 
+      ]
+    },
+    {
+      "type": "powershell",
+      "script": "./scripts/language.ps1"
+    },
+    {
+      "type":"powershell",
+      "script": "./scripts/Win10_VirtualDesktop_Optimize"
+    },
+    {
+    "type": "powershell",
+    "pause_before": "1m",
+    "inline": [
+        "& net start WindowsAzureGuestAgent",
+        "& net start rdagent",
+        "while ((Get-Service RdAgent).Status -ne 'Running') { Start-Sleep -s 5 }",
+        "while ((Get-Service WindowsAzureGuestAgent).Status -ne 'Running') { Start-Sleep -s 5 }"
+    ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quiet /quit",
+        "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
+      ]
+    }
+  ]
+}
