@@ -88,10 +88,6 @@
       "script": "./scripts/language.ps1"
     },
     {
-      "type":"powershell",
-      "script": "./scripts/Win10_VirtualDesktop_Optimize"
-    },
-    {
     "type": "powershell",
     "pause_before": "1m",
     "inline": [
