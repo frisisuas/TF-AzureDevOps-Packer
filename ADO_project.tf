@@ -22,19 +22,6 @@ resource "azuredevops_git_repository" "repo" {
     init_type = "Clean"
   }
 }
-#Importamos un repo existente con los archivos yml y json para crear la golden Imagen.
-resource "azuredevops_git_repository" "existing_repo" {
-  project_id = azuredevops_project.test_project.id
-  name       = "imported-TF-AzureDevOps-Packer"
-
-  initialization {
-    init_type   = "Import"
-    source_type = "Git"
-    source_url  = "https://github.com/frisisuas/TF-AzureDevOps-Packer"
-  }
-}
-
-
 
 #Creación del endpoint para el SP
 /*
