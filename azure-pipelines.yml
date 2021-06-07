@@ -14,9 +14,9 @@ stages:
   - job: build
     displayName: Build Image
     pool:
-      name: frsteam_agent
+      name: <nombre del pool de agentes>
       demands:
-        - agent.name -equals agent 
+        - agent.name -equals <nombre del agente> 
     steps:
     - task: PowerShell@2
       displayName: "Mount azure file share to Z"
