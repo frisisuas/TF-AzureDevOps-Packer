@@ -17,43 +17,40 @@ stages:
       name: frsteam_agent
       demands:
         - agent.name -equals agent 
-      steps:
-      - task: PowerShell@2
-        displayName: "Mount azure file share to Z"
-        inputs:
-          targetType: 'inline'
-          script: |
-            net use * /delete /y
-            write-host "$(ADOAppSecret)"
-            $connectTestResult = Test-NetConnection -ComputerName packerinstappsebzrx.file.core.windows.net -Port 445
-            if ($connectTestResult.TcpTestSucceeded) {
-              # Save the password so the drive will persist on reboot
-              cmd.exe /C "cmdkey /add:`"$(StorageAccountName).file.core.windows.net`" /user:`"Azure\$(StorageAccountName)`" /pass:`"$(StorageAccountKey)`""
-              # Mount the drive
-              New-PSDrive -Name Z -PSProvider FileSystem -Root "\\$(StorageAccountName).file.core.windows.net\installers" -Persist
-            } 
-      - task: riezebosch.Packer.PackerTool.PackerTool@0
-        displayName: 'Use Packer 1.7.2'
-        inputs:
-          version: 1.7.2
-      - task: PackerBuild@1
-        displayName: 'Build Image'
-        inputs:
+    steps:
+    - task: PowerShell@2
+      displayName: "Mount azure file share to Z"
+      inputs:
+        targetType: 'inline'
+        script: |
+          net use * /delete /y
+          $connectTestResult = Test-NetConnection -ComputerName $(StorageAccountName).file.core.windows.net -Port 445
+          if ($connectTestResult.TcpTestSucceeded) {
+          cmd.exe /C "cmdkey /add:`"$(StorageAccountName).file.core.windows.net`" /user:`"Azure\$(StorageAccountName)`" /pass:`"$(StorageAccountKey)`""
+          New-PSDrive -Name Z -PSProvider FileSystem -Root "\\$(StorageAccountName).file.core.windows.net\installers" -Persist
+          } 
+    - task: riezebosch.Packer.PackerTool.PackerTool@0
+      displayName: 'Use Packer 1.7.2'
+      inputs:
+        version: 1.7.2
+    - task: PackerBuild@1
+      displayName: 'Build Image'
+      inputs:
           templateType: custom
           customTemplateLocation: 'packer.json'
           customTemplateParameters: '{"ADOServicePrincipalAppId":"$(ADOAppID)","ADOServicePrincipalSecret":"$(ADOAppSecret)","TenantId":"$(TenantId)","SubscriptionId":"$(SubscriptionId)","ImageDestRG":"$(ImageDestRG)","TempResourceGroup":"$(TempResourceGroup)","VirtualNetwork":"$(VirtualNetwork)","VirtualNetworkRG":"$(VirtualNetworkRG)","Subnet":"$(Subnet)","Location":"$(Location)","VMSize":"$(VMSize)","StorageAccountInstallersName":"$(StorageAccountName)","StorageAccountInstallersKey":"$(StorageAccountKey)","StorageAccountInstallersPath":"$(StorageAccountInstallersPath)"}'
           imageUri: BuildImage
-      - task: nkdagility.variablehydration.variabledehydration-task.variabledehydration@0
-        displayName: 'Save Build Variables: BuildImage'
-        inputs:
-          prefixes: BuildImage
-      - task: PublishBuildArtifacts@1
-        displayName: 'Publish Artifact: Build Image and associated Template'
-        inputs:
-          ArtifactName: 'Build Image'
-      - task: PowerShell@2
-        displayName: "Dismount any mapped network drive"
-        inputs:
-          targetType: 'inline'
-          script: |
+    - task: nkdagility.variablehydration.variabledehydration-task.variabledehydration@0
+      displayName: 'Save Build Variables: BuildImage'
+      inputs:
+        prefixes: BuildImage
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: Build Image and associated Template'
+      inputs:
+        ArtifactName: 'Build Image'
+    - task: PowerShell@2
+      displayName: "Dismount any mapped network drive"
+      inputs:
+        targetType: 'inline'
+        script: |
               net use * /delete /y
