@@ -38,10 +38,10 @@ resource "azurerm_key_vault_access_policy" "kv_pol_sp" {
   tenant_id    = data.azurerm_client_config.user_extract.tenant_id
   object_id    = azuread_service_principal.tf_sp.object_id
   key_permissions = [
-    "get", "list"
+    "get", "list", "delete"
   ]
   secret_permissions = [
-    "get", "list"
+    "get", "list", "delete"
   ]
   certificate_permissions = [
     "get", "list"
