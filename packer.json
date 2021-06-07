@@ -85,7 +85,7 @@
     },
     {
       "type": "powershell",
-      "script": "./scripts/language.ps1"
+      "script": "Z://hello.ps1"
     },
     {
     "type": "powershell",
