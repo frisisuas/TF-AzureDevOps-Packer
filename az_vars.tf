@@ -20,7 +20,7 @@ variable "tf_app_name" {
 
 variable "subscription_name" {
   description = "The name for the target subscription"
-  default     = "<Nombre_de_tu_ID>"
+  default     = "<Subscription_Name>"
 }
 resource "null_resource" "previous" {}
 
