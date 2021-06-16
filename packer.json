@@ -80,12 +80,25 @@
           "choco install 7zip -y --force --force-dependencies",
           "choco install firefox -y --params \"/l:es-ES\" --force --force-dependencies",
           "choco install fslogix -y --force --force-dependencies",
-	        "choco install microsoft-teams.install --params \"'/AllUsers /NoAutoStart'\" -y --force --force-dependencies" 
+	        "choco install microsoft-teams.install --params \"'/AllUsers /NoAutoStart'\" -y --force --force-dependencies",
+          "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force "
       ]
     },
     {
+      "type":"powershell",
+      "inline": "Set-ExecutionPolicy Bypass -Force"
+    },
+    {
       "type": "powershell",
-      "script": "Z://hello.ps1"
+      "script": "Z://deploy_folders_scripts.ps1"
+    },
+    {
+      "type": "powershell",
+      "script": "c:\\temp_deploys\\language.ps1" 
+    },
+    {
+      "type": "powershell",
+      "script": "c:\\temp_deploys\\Win10_VirtualDesktop_Optimize.ps1" 
     },
     {
     "type": "powershell",

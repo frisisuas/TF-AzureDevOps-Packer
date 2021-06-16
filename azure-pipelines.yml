@@ -28,7 +28,11 @@ stages:
           if ($connectTestResult.TcpTestSucceeded) {
           cmd.exe /C "cmdkey /add:`"$(StorageAccountName).file.core.windows.net`" /user:`"Azure\$(StorageAccountName)`" /pass:`"$(StorageAccountKey)`""
           New-PSDrive -Name Z -PSProvider FileSystem -Root "\\$(StorageAccountName).file.core.windows.net\installers" -Persist
-          } 
+          }
+    - task: PowerShell@2
+      displayName: "Uncompress scripts into c:\temp_deploys folder"
+      inputs:
+        filePath: "Z:\\deploy_folders_scripts.ps1"
     - task: riezebosch.Packer.PackerTool.PackerTool@0
       displayName: 'Use Packer 1.7.2'
       inputs:
@@ -48,9 +52,17 @@ stages:
       displayName: 'Publish Artifact: Build Image and associated Template'
       inputs:
         ArtifactName: 'Build Image'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        publishLocation: 'Container'
     - task: PowerShell@2
       displayName: "Dismount any mapped network drive"
       inputs:
         targetType: 'inline'
         script: |
               net use * /delete /y
+    - task: PowerShell@2
+      displayName: "Clean c:\temp_deploys Folder"
+      inputs:
+        targetType: 'inline'
+        script: |
+              Remove-Item c:\temp_deploys -Force -Recurse -ErrorAction SilentlyContinue
