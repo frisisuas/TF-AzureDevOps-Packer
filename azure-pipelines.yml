@@ -30,9 +30,11 @@ stages:
           New-PSDrive -Name Z -PSProvider FileSystem -Root "\\$(StorageAccountName).file.core.windows.net\installers" -Persist
           }
     - task: PowerShell@2
-      displayName: "Uncompress scripts into c:\temp_deploys folder"
+      displayName: "Uncompress scripts into c:\\temp_deploys folder"
       inputs:
-        filePath: "Z:\\deploy_folders_scripts.ps1"
+        targetType: 'inline'
+        script: |
+         "PowerShell.exe -ExecutionPolicy Bypass -File Z:\\deploy_folders_scripts.ps1"
     - task: riezebosch.Packer.PackerTool.PackerTool@0
       displayName: 'Use Packer 1.7.2'
       inputs:
