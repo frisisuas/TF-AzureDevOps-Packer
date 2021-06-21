@@ -85,12 +85,13 @@
       ]
     },
     {
-      "type":"powershell",
-      "inline": "Set-ExecutionPolicy Bypass -Force"
+      "type": "file",
+      "source": "c:\\temp_deploys\\",
+      "destination": "c:\\Windows\\temp_deploys"
     },
     {
       "type": "powershell",
-      "script": "Z://deploy_folders_scripts.ps1"
+      "script": "Z:\\deploy_folders_scripts.ps1"
     },
     {
       "type": "powershell",
@@ -98,7 +99,7 @@
     },
     {
       "type": "powershell",
-      "script": "c:\\temp_deploys\\Win10_VirtualDesktop_Optimize.ps1" 
+      "inline": "powershell.exe c:\\temp_deploys\\Win10_VirtualDesktop_Optimize.ps1 -WindowsVersion 2009 -Verbose" 
     },
     {
     "type": "powershell",
