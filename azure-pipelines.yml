@@ -19,7 +19,7 @@ stages:
         - agent.name -equals agent 
     steps:
     - task: riezebosch.Packer.PackerTool.PackerTool@0
-      displayName: 'Use Packer Latest version'
+      displayName: 'Use Packer Latest'
       inputs:
         version: 
     - task: PackerBuild@1
@@ -27,7 +27,7 @@ stages:
       inputs:
           templateType: custom
           customTemplateLocation: 'packer.json'
-          customTemplateParameters: '{"ADOServicePrincipalAppId":"$(ADOAppID)","ADOServicePrincipalSecret":"$(ADOAppSecret)","TenantId":"$(TenantId)","SubscriptionId":"$(SubscriptionId)","ImageDestRG":"$(ImageDestRG)","TempResourceGroup":"$(TempResourceGroup)","VirtualNetwork":"$(VirtualNetwork)","VirtualNetworkRG":"$(VirtualNetworkRG)","Subnet":"$(Subnet)","Location":"$(Location)","VMSize":"$(VMSize)","StorageAccountInstallersName":"$(StorageAccountName)","StorageAccountInstallersKey":"$(StorageAccountKey)","StorageAccountInstallersPath":"$(StorageAccountInstallersPath)"}'
+          customTemplateParameters: '{"ADOServicePrincipalAppId":"$(ADOAppID)","ADOServicePrincipalSecret":"$(ADOAppSecret)","TenantId":"$(TenantId)","SubscriptionId":"$(SubscriptionId)","ImageDestRG":"$(ImageDestRG)","TempResourceGroup":"$(TempResourceGroup)","VirtualNetwork":"$(VirtualNetwork)","VirtualNetworkRG":"$(VirtualNetworkRG)","Subnet":"$(Subnet)","Location":"$(Location)","VMSize":"$(VMSize)","StorageAccountInstallersName":"$(StorageAccountName)","StorageAccountInstallersKey":"$(StorageAccountKey)","StorageAccountInstallersPath":"$(filesharePath)"}'
           imageUri: BuildImage
     - task: nkdagility.variablehydration.variabledehydration-task.variabledehydration@0
       displayName: 'Save Build Variables: BuildImage'
