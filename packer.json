@@ -15,9 +15,9 @@
     "Location": "",
     "VMSize": "",
 
-    "StorageAccountName": "",
-    "StorageAccountKey": "",
-    "packaged_app_installs_path": "",
+    "StorageAccountInstallersName": "",
+    "StorageAccountInstallersKey": "",
+    "StorageAccountInstallersPath": "",
 
     "ImagePublisher":"MicrosoftWindowsDesktop",
     "ImageOffer":"office-365",
@@ -46,7 +46,7 @@
       "communicator": "winrm",
       "winrm_use_ssl": "true",
       "winrm_insecure": "true",
-      "winrm_timeout": "30m",
+      "winrm_timeout": "3m",
       "winrm_username": "packer",
 
       "virtual_network_name": "{{user `VirtualNetwork`}}",
@@ -72,35 +72,69 @@
           "while ((Get-Service RdAgent).Status -ne 'Running') { Start-Sleep -s 5 }",
           "while ((Get-Service WindowsAzureGuestAgent).Status -ne 'Running') { Start-Sleep -s 5 }",
           "& net stop WindowsAzureGuestAgent",
-          "& net stop rdagent",
-          "Set-ExecutionPolicy Bypass -Scope Process -Force",
-          "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12",
-          "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))",
-          "choco install notepadplusplus -y --force --force-dependencies",
-          "choco install 7zip -y --force --force-dependencies",
-          "choco install firefox -y --params \"/l:es-ES\" --force --force-dependencies",
-          "choco install fslogix -y --force --force-dependencies",
-	        "choco install microsoft-teams.install --params \"'/AllUsers /NoAutoStart'\" -y --force --force-dependencies",
-          "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force "
+          "& net stop rdagent"
       ]
     },
     {
-      "type": "file",
-      "source": "c:\\temp_deploys\\",
-      "destination": "c:\\Windows\\temp_deploys"
+      "type": "powershell",
+      "inline": [
+          "$ErrorActionPreference='Stop'",
+
+          "Test-NetConnection -ComputerName {{user `StorageAccountInstallersName`}}.file.core.windows.net -Port 445",
+          "Import-Module -Name Smbshare -Force -Scope Local",
+          "New-SmbMapping -LocalPath Z: -RemotePath \"\\\\{{user `StorageAccountInstallersName`}}.file.core.windows.net\\installers\" -Username \"Azure\\{{user `StorageAccountInstallersName`}}\" -Password \"{{user `StorageAccountInstallersKey`}}\"",
+          "Write-Host \"'Z:' drive mapped\""
+      ]
+    },
+    {
+      "type":"powershell",
+      "inline": [
+        "New-Item -Path \"c:\\\" -Name \"temp_deploys\" -ItemType \"directory\""
+        ]
     },
     {
       "type": "powershell",
-      "script": "Z:\\deploy_folders_scripts.ps1"
+      "inline": [
+        "Copy-Item -Path Z:\\scripts\\language.zip -Destination c:\\temp_deploys"
+      ]
     },
     {
       "type": "powershell",
-      "script": "c:\\temp_deploys\\language.ps1" 
+      "inline": [
+          "Get-ChildItem Z:"
+      ] 
+    },
+    {
+      "type":"powershell",
+      "inline": [
+          "Write-Host \"Hello World!!\" -ForegroundColor Yellow -BackgroundColor DarkCyan"
+      ]
     },
     {
       "type": "powershell",
-      "inline": "powershell.exe c:\\temp_deploys\\Win10_VirtualDesktop_Optimize.ps1 -WindowsVersion 2009 -Verbose" 
+      "inline": [
+        "powershell.exe c:\\temp_deploys\\hello_world.ps1"
+      ]
     },
+    {
+      "type": "powershell",
+      "inline": [   
+        "Expand-Archive -LiteralPath c:\\temp_deploys\\language.zip -DestinationPath c:\\temp_deploys -Force", 
+        "powershell.exe c:\\temp_deploys\\language.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [      
+        "powershell.exe c:\\temp_deploys\\WVDOptimize.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "30m",
+      "restart_check_command": "powershell -command \"& {Write-Output 'restarted.'}\""
+    },
+    
     {
     "type": "powershell",
     "pause_before": "1m",
