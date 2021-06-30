@@ -63,7 +63,7 @@ DisableAdminShares              # EnableAdminShares
 # EnableCIMemoryIntegrity       # DisableCIMemoryIntegrity
 # EnableDefenderAppGuard        # DisableDefenderAppGuard
 HideAccountProtectionWarn       # ShowAccountProtectionWarn
-# DisableDownloadBlocking       # EnableDownloadBlocking
+DisableDownloadBlocking       # EnableDownloadBlocking
 DisableScriptHost               # EnableScriptHost
 EnableDotNetStrongCrypto        # DisableDotNetStrongCrypto
 # EnableMeltdownCompatFlag      # DisableMeltdownCompatFlag
@@ -90,7 +90,7 @@ SetCurrentNetworkPrivate        # SetCurrentNetworkPublic
 # DisableNCSIProbe              # EnableNCSIProbe
 # DisableConnectionSharing      # EnableConnectionSharing
 DisableRemoteAssistance         # EnableRemoteAssistance
-# EnableRemoteDesktop           # DisableRemoteDesktop
+ EnableRemoteDesktop           # DisableRemoteDesktop
 
 ### Service Tweaks ###
 # DisableUpdateMSRT             # EnableUpdateMSRT
