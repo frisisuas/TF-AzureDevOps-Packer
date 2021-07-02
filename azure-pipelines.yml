@@ -19,9 +19,9 @@ stages:
         - agent.name -equals agent 
     steps:
     - task: riezebosch.Packer.PackerTool.PackerTool@0
-      displayName: 'Use Packer 1.7.2'
+      displayName: 'Use Packer latest'
       inputs: 
-        version: 1.7.2
+        version: 
     - task: PackerBuild@1
       displayName: 'Build Image'
       inputs:
