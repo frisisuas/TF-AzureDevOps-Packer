@@ -127,7 +127,7 @@
       "type": "powershell",
       "inline": [
         "$ErrorActionPreference = 'continue'",
-        "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"Z:\\scripts\\Win10.ps1\" -include \"Z:\\scripts\\Win10.psm1\" -preset \"Z:\\scripts\\Default.preset\""
+        "powershell.exe Z:\\scripts\\Win10.ps1 -include Z:\\scripts\\Win10.psm1 -preset Z:\\scripts\\Default.preset"
       ]
     },
     {
@@ -137,6 +137,21 @@
         "Remove-Item –Path c:\\temp_deploys –Force -ErrorAction SilentlyContinue"
       ]
     },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "10m",
+      "restart_check_command": "powershell -command \"& {Write-Output 'restarted.'}\""
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "dism /online /get-intl",
+        "Set-WinSystemLocale es-es",
+        "Set-WinUserLanguageList es-es -Force",
+        "Set-WinSystemLocale -SystemLocale es-es",
+        "Set-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Nls\\Language\" -Name \"InstallLanguage\" -Value 0c0A"
+      ]
+    },   
     {
       "type": "powershell",
       "inline": [
