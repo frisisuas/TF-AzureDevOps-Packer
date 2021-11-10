@@ -27,6 +27,8 @@ inspirado:
 
 [Adin Ermie visita su blog.](https://adinermie.com/deploying-azure-devops-ado-using-terraform/)
 
+[www.thatlazyadmin.com](https://www.thatlazyadmin.com/2019/08/13/how-to-list-available-azure-vm-images-using-powershell/)
+
 # Infraestructura como código: Realización de una golden image de Windows 10 multi-session + o365.
 
 Gracias a los numerosos avances dentro del entorno cloud, \"está\"
