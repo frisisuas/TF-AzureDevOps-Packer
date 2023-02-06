@@ -55,7 +55,7 @@ resource "azuredevops_variable_group" "vars" {
 
 
 resource "azuredevops_variable_group" "key_vars" {
-    depends_on = [
+  depends_on = [
     azurerm_key_vault_secret.StorageAccountKey,
     azurerm_key_vault_secret.StorageAccountName,
     azurerm_key_vault_secret.ADOAppSecret,

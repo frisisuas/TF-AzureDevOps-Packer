@@ -19,10 +19,10 @@ resource "azurerm_storage_account" "stg_acc" {
   location                  = var.location
   name                      = "packerinstapps${random_string.randomize.result}"
   resource_group_name       = azurerm_resource_group.rg.name
-  access_tier               = "Cold"
+  access_tier               = "Hot"
   account_kind              = "StorageV2"
   enable_https_traffic_only = true
-  allow_blob_public_access  = false
+  allow_nested_items_to_be_public = false
 
 }
 

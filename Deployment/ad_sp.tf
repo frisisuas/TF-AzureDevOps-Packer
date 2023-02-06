@@ -17,11 +17,16 @@ resource "random_password" "password" {
   length  = 32
   special = true
 }
+resource "time_rotating" "sp_passwd_rotation" {
+  rotation_days = 7
+}
 
 # Aplicación de la contraseña al SP y su validez.
 resource "azuread_service_principal_password" "tf_sp_pass" {
   service_principal_id = azuread_service_principal.tf_sp.id
-  value                = random_password.password.result
+  rotate_when_changed = {
+    rotation = time_rotating.sp_passwd_rotation.id
+  }
   end_date_relative    = "8760h"
 }
 # Generador de 5 caracteres para el account storage.
@@ -29,6 +34,6 @@ resource "random_string" "randomize" {
   length  = 5
   lower   = true
   upper   = false
-  number  = false
+  numeric = false
   special = false
 }

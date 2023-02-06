@@ -18,10 +18,10 @@ resource "azurerm_network_security_rule" "nsg_regla" {
   source_port_range           = "*"
   destination_port_range      = "3389"
   destination_address_prefix  = "*"
-  source_address_prefix       = chomp(data.http.icanhazip.body)
+  source_address_prefix       = chomp(data.http.icanhazip.response_body)
 }
 resource "azurerm_virtual_network" "vnet" {
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["10.10.0.0/16"]
   location            = var.location
   name                = "vnet"
   resource_group_name = azurerm_resource_group.rg.name
@@ -31,7 +31,7 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes = [
-    "10.0.10.0/24"
+    "10.10.10.0/24"
   ]
 }
 

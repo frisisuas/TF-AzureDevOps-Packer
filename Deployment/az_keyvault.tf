@@ -20,13 +20,13 @@ resource "azurerm_key_vault_access_policy" "kv_pol_admin" {
   tenant_id    = data.azurerm_client_config.user_extract.tenant_id
   object_id    = data.azurerm_client_config.user_extract.object_id
   key_permissions = [
-    "get", "list", "update", "create", "import", "delete", "recover", "backup", "restore", "purge"
+    "Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Backup", "Restore", "Purge"
   ]
   secret_permissions = [
-    "get", "list", "delete", "recover", "backup", "restore", "set", "purge"
+    "Get", "List", "Delete", "Recover", "Backup", "Restore", "Set", "Purge"
   ]
   certificate_permissions = [
-    "get", "list", "update", "create", "import", "delete", "recover", "backup", "restore", "deleteissuers", "getissuers", "listissuers", "managecontacts", "manageissuers", "setissuers"
+    "Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Backup", "Restore", "DeleteIssuers", "GetIssuers", "ListIssuers", "ManageContacts", "ManageIssuers", "SetIssuers"
   ]
 }
 
@@ -38,13 +38,13 @@ resource "azurerm_key_vault_access_policy" "kv_pol_sp" {
   tenant_id    = data.azurerm_client_config.user_extract.tenant_id
   object_id    = azuread_service_principal.tf_sp.object_id
   key_permissions = [
-    "get", "list", "update", "create", "import", "delete", "recover", "backup", "restore", "purge"
+    "Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Backup", "Restore", "Purge"
   ]
   secret_permissions = [
-    "get", "list", "delete", "recover", "backup", "restore", "set", "purge"
+    "Get", "List", "Delete", "Recover", "Backup", "Restore", "Set", "Purge"
   ]
   certificate_permissions = [
-    "get", "list", "update", "create", "import", "delete", "recover", "backup", "restore", "deleteissuers", "getissuers", "listissuers", "managecontacts", "manageissuers", "setissuers"
+    "Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Backup", "Restore", "DeleteIssuers", "GetIssuers", "ListIssuers", "ManageContacts", "ManageIssuers", "SetIssuers"
   ]
 }
 
@@ -58,7 +58,7 @@ resource "azurerm_key_vault_secret" "ADOAppID" {
   value        = azuread_service_principal.tf_sp.application_id
 }
 resource "azurerm_key_vault_secret" "ADOAppSecret" {
-    depends_on = [
+  depends_on = [
     azurerm_key_vault_access_policy.kv_pol_sp
   ]
   key_vault_id = azurerm_key_vault.key_vault.id
@@ -66,7 +66,7 @@ resource "azurerm_key_vault_secret" "ADOAppSecret" {
   value        = azuread_service_principal_password.tf_sp_pass.value
 }
 resource "azurerm_key_vault_secret" "StorageAccountName" {
-    depends_on = [
+  depends_on = [
     azurerm_key_vault_access_policy.kv_pol_sp
   ]
   key_vault_id = azurerm_key_vault.key_vault.id
@@ -74,7 +74,7 @@ resource "azurerm_key_vault_secret" "StorageAccountName" {
   value        = azurerm_storage_account.stg_acc.name
 }
 resource "azurerm_key_vault_secret" "StorageAccountKey" {
-    depends_on = [
+  depends_on = [
     azurerm_key_vault_access_policy.kv_pol_sp
   ]
   key_vault_id = azurerm_key_vault.key_vault.id
