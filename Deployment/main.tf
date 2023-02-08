@@ -5,6 +5,11 @@
 resource "azurerm_resource_group" "rg" {
   name     = var.rgname
   location = var.location
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 ## Obtendremos los datos del usuario conectado:
@@ -24,6 +29,11 @@ resource "azurerm_storage_account" "stg_acc" {
   enable_https_traffic_only = true
   allow_nested_items_to_be_public = false
 
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 # Necesitamos un file share donde poner los instaladores del software para la imagen.

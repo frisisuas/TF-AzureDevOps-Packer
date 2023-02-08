@@ -10,6 +10,11 @@ resource "azurerm_key_vault" "key_vault" {
   purge_protection_enabled   = false
   sku_name                   = "standard"
 
+  lifecycle {
+    ignore_changes = [
+    tags
+    ]
+  }
 }
 
 resource "azurerm_key_vault_access_policy" "kv_pol_admin" {

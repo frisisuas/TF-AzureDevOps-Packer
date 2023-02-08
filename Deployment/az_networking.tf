@@ -6,6 +6,11 @@ resource "azurerm_network_security_group" "nsg" {
   location            = var.location
   name                = "vm-NSG"
   resource_group_name = azurerm_resource_group.rg.name
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 resource "azurerm_network_security_rule" "nsg_regla" {
   access                      = "Allow"
@@ -25,6 +30,11 @@ resource "azurerm_virtual_network" "vnet" {
   location            = var.location
   name                = "vnet"
   resource_group_name = azurerm_resource_group.rg.name
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 resource "azurerm_subnet" "subnet" {
   name                 = "subnet"
@@ -42,6 +52,11 @@ resource "azurerm_public_ip" "pip" {
   resource_group_name     = azurerm_resource_group.rg.name
   idle_timeout_in_minutes = 30
 
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
+  }
 }
 
 resource "azurerm_network_interface" "nic" {
@@ -53,5 +68,10 @@ resource "azurerm_network_interface" "nic" {
     public_ip_address_id          = azurerm_public_ip.pip.id
     name                          = "pip"
     private_ip_address_allocation = "Dynamic"
+  }
+  lifecycle {
+    ignore_changes = [
+      tags
+    ]
   }
 }

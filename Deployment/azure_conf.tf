@@ -21,7 +21,7 @@ variable "azurerm_subscription_id" {
 
 variable "org_url" {
   description = "Organization url"
-  default     = "https://dev.azure.com/<tu_organización>/"
+  default     = "https://dev.azure.com/personalorganization/"
 }
 
 variable "pat" {

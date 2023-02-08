@@ -13,7 +13,7 @@ resource "azuredevops_project" "test_project" {
   }
 }
 
-#creamos el repo
+#creamos un repo de ejemplo
 resource "azuredevops_git_repository" "repo" {
   project_id = azuredevops_project.test_project.id
   name       = "Repositorio para implementar packer y crear una golden image"
@@ -23,6 +23,18 @@ resource "azuredevops_git_repository" "repo" {
   }
 }
 
+# Importación de un repo existente
+resource "azuredevops_git_repository" "existing_repo" {
+  project_id = azuredevops_project.test_project.id
+  name       = "Imported-TF-AzureDevOps-Packer"
+
+  initialization {
+    init_type   = "Import"
+    source_type = "Git"
+    source_url  = "https://github.com/frisisuas/Tutorial-TF-AzureDevOps-files.git"
+
+  }
+}
 #Creación del endpoint para el SP
 /*
     project_id – The ID for azure devops project, which will contain the endpoint
