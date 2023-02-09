@@ -57,9 +57,9 @@ resource "azurerm_storage_share_file" "upload_main_scripts" {
   depends_on = [
     azurerm_storage_share_directory.folder_scripts
   ]
-  for_each         = fileset("./scripts/", "*")
+  for_each         = fileset("..\\scripts\\", "*")
   storage_share_id = azurerm_storage_share.strg_share.id
   name             = each.value
-  source           = "./scripts/${each.value}"
+  source           = "..\\scripts\\${each.value}"
   path             = "scripts"
 }

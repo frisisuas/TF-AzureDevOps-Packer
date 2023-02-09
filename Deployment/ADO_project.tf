@@ -23,6 +23,35 @@ resource "azuredevops_git_repository" "repo" {
   }
 }
 
+resource "azuredevops_git_repository_file" "pipeline_file" {
+  repository_id       = azuredevops_git_repository.repo.id
+  file                = "azure-pipelines.yml"
+  content             = "file(..\\azure-pipelines.yml)"
+  commit_message      = "First commit"
+  overwrite_on_create = true
+  lifecycle {
+    ignore_changes = [
+      file,
+      content,
+      commit_message
+    ]
+  }
+}
+resource "azuredevops_git_repository_file" "packer_file" {
+  repository_id       = azuredevops_git_repository.repo.id
+  file                = "packer.json"
+  content             = "file(..\\packer.json)"
+  commit_message      = "First commit"
+  overwrite_on_create = true
+  lifecycle {
+    ignore_changes = [
+      file,
+      content,
+      commit_message
+    ]
+  }
+}
+
 # Importación de un repo existente
 resource "azuredevops_git_repository" "existing_repo" {
   project_id = azuredevops_project.test_project.id

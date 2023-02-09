@@ -14,9 +14,7 @@ stages:
   - job: build
     displayName: Build Image
     pool:
-      name: frsteam_agent
-      demands:
-        - agent.name -equals agent 
+      vmImage: 'windows-latest'
     steps:
     - task: riezebosch.Packer.PackerTool.PackerTool@0
       displayName: 'Use latest Packer'

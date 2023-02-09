@@ -36,7 +36,7 @@
       "subscription_id": "{{user `SubscriptionId`}}",
 
       "os_type": "Windows",
-      "managed_image_name": "{{user `Build_DefinitionName`}}-{{isotime \"2006-01-02-1504\"}}-Build{{user `Build_BuildNumber`}}",
+      "managed_image_name": "packer-win10-21h1-avd-{{isotime \"2006-01-02-1504\"}}",
       "managed_image_resource_group_name": "{{user `ImageDestRG`}}",
       "temp_resource_group_name": "{{user `TempResourceGroup`}}",
 
@@ -83,6 +83,12 @@
       "inline": [
         "powershell.exe Z:\\\\scripts\\hello_world.ps1"
 
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "powershell.exe Z:\\\\scripts\\language.ps1"
       ]
     },
     {
