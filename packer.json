@@ -88,6 +88,12 @@
     {
       "type": "powershell",
       "inline": [
+        "powershell.exe Z:\\\\scripts\\replace-wallpaper-sysprep.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "inline": [
         "powershell.exe Z:\\\\scripts\\language.ps1"
       ]
     },

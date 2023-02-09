@@ -12,7 +12,7 @@ resource "azuredevops_project" "test_project" {
     "artifacts" = "enabled"
   }
 }
-
+/* Work in progress
 #creamos un repo de ejemplo
 resource "azuredevops_git_repository" "repo" {
   project_id = azuredevops_project.test_project.id
@@ -26,7 +26,7 @@ resource "azuredevops_git_repository" "repo" {
 resource "azuredevops_git_repository_file" "pipeline_file" {
   repository_id       = azuredevops_git_repository.repo.id
   file                = "azure-pipelines.yml"
-  content             = "file(..\\azure-pipelines.yml)"
+  content             = fileset("..\\azure-pipelines.yml")
   commit_message      = "First commit"
   overwrite_on_create = true
   lifecycle {
@@ -40,7 +40,7 @@ resource "azuredevops_git_repository_file" "pipeline_file" {
 resource "azuredevops_git_repository_file" "packer_file" {
   repository_id       = azuredevops_git_repository.repo.id
   file                = "packer.json"
-  content             = "file(..\\packer.json)"
+  content             = fileset("..\\packer.json", "*")
   commit_message      = "First commit"
   overwrite_on_create = true
   lifecycle {
@@ -51,7 +51,7 @@ resource "azuredevops_git_repository_file" "packer_file" {
     ]
   }
 }
-
+*/
 # Importación de un repo existente
 resource "azuredevops_git_repository" "existing_repo" {
   project_id = azuredevops_project.test_project.id
